@@ -146,6 +146,9 @@ class SubmissionManager(JWTAccessible["Submission"], models.Manager):
         if 'lang' not in meta_data_dict:
             meta_data_dict['lang'] = get_language()
 
+        #create and store hash
+        meta_data_dict["submission_hash"] = "HASH"
+
         try:
             new_submission = Submission.objects.create(
                 exercise=exercise,

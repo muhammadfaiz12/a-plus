@@ -318,6 +318,7 @@ class CachedPoints(ContentMixin, CachedAbstract):
                     'url': submission.get_url('submission-plain'),
                     'feedback_revealed': True,
                     'feedback_reveal_time': None,
+                    'hash' : submission.meta_data.get('submission_hash', None),
                 })
                 # Update best submission if exercise points are not forced, and
                 # one of these is true:

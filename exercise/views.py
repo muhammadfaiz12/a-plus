@@ -156,6 +156,10 @@ class ExerciseView(BaseRedirectMixin, ExerciseBaseView, EnrollableViewMixin):
             self.submission_check(True, request)
         )
         if submission_allowed:
+            if self.check_duplicate_submission():
+                messages.error(request,
+                _('ERROR_SUBMISSION_SAVING_FAILED')
+                )
             try:
                 new_submission = Submission.objects.create_from_post(
                     self.exercise, students, request)
@@ -342,7 +346,9 @@ class ExerciseView(BaseRedirectMixin, ExerciseBaseView, EnrollableViewMixin):
             }
 
         return loaded_content
-
+    
+    def check_duplicate_submission():
+        return False
 
 class ExercisePlainView(ExerciseView):
     raise_exception=True
