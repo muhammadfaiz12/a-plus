@@ -4,6 +4,7 @@ import logging
 from mimetypes import guess_type
 import os
 from typing import IO, Dict, Iterable, List, Tuple, TYPE_CHECKING
+import hashlib
 
 from binaryornot.check import is_binary
 from django.conf import settings
@@ -146,8 +147,15 @@ class SubmissionManager(JWTAccessible["Submission"], models.Manager):
         if 'lang' not in meta_data_dict:
             meta_data_dict['lang'] = get_language()
 
-        #create and store hash
-        meta_data_dict["submission_hash"] = "HASH"
+        #create Hash
+        dhash = hashlib.md5()
+        files_encoded = json.dumps(request.FILES, sort_keys=True, default=str).encode()
+        exercise_encoded = json.dumps(exercise, sort_keys=True, default=str).encode()
+        dhash.update(exercise_encoded)
+        dhash.update(files_encoded)
+        new_hash = dhash.hexdigest()
+        meta_data_dict["submission_hash"] =new_hash
+
 
         try:
             new_submission = Submission.objects.create(
